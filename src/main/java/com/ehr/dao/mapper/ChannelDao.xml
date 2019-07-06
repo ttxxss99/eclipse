@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehr.dao.ChannelDao">
+<!-- 渠道管理表的Mapper映射器XML实现部分  -->
+  <resultMap id="BaseResultMap" type="com.ehr.model.Channel">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="addTime" jdbcType="DATE" property="addtime" />
+    <result column="logicToDelete" jdbcType="INTEGER" property="logictodelete" />
+  </resultMap>
+  <!-- 删除指定id的数据 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ehr_channel
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 新增一条数据 -->
+  <insert id="insert" parameterType="com.ehr.model.Channel">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ehr_channel (name, mark, addTime, 
+      logicToDelete)
+    values (#{name,jdbcType=VARCHAR}, #{mark,jdbcType=VARCHAR}, #{addtime,jdbcType=DATE}, 
+      #{logictodelete,jdbcType=INTEGER})
+  </insert>
+  <!-- 修改指定id的数据 -->
+  <update id="updateByPrimaryKey" parameterType="com.ehr.model.Channel">
+    update ehr_channel
+    set name = #{name,jdbcType=VARCHAR},
+      mark = #{mark,jdbcType=VARCHAR},
+      addTime = #{addtime,jdbcType=DATE},
+      logicToDelete = #{logictodelete,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 查询指定id的数据 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, mark, addTime, logicToDelete
+    from ehr_channel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 查询所有数据 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, mark, addTime, logicToDelete
+    from ehr_channel
+  </select>
+</mapper>

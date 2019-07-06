@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehr.dao.NumberDao">
+  <resultMap id="BaseResultMap" type="com.ehr.model.Number">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="people" jdbcType="INTEGER" property="people" />
+    <result column="date" jdbcType="DATE" property="date" />
+    <result column="company_id" jdbcType="INTEGER" property="companyId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--根据id删除一条数据-->
+    delete from dbi_number
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ehr.model.Number">
+    <!--新增一条数据-->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dbi_number (dept, people, date, 
+      company_id)
+    values (#{dept,jdbcType=VARCHAR}, #{people,jdbcType=INTEGER}, #{date,jdbcType=DATE}, 
+      #{companyId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ehr.model.Number">
+    <!--根据id更新一条数据-->
+    update dbi_number
+    set dept = #{dept,jdbcType=VARCHAR},
+      people = #{people,jdbcType=INTEGER},
+      date = #{date,jdbcType=DATE},
+      company_id = #{companyId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--根据id查询一条数据-->
+    select id, dept, people, date, company_id
+    from dbi_number
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    <!--查找所有数据-->
+    select id, dept, people, date, company_id
+    from dbi_number
+  </select>
+  <select id="selectAllDate" resultType="java.util.Date">
+    <!--查找所有月份 去重-->
+    select distinct date
+    from dbi_number
+  </select>
+  <select id="selectAllCompany" resultType="java.lang.String">
+    <!--查找所有公司名字 去重-->
+    select name from ehr_company
+    where id in (select distinct company_id
+    from dbi_number);
+   
+  </select>
+  <select id="selectByDate" resultMap="BaseResultMap">
+    <!--根据月份查数据 -->
+    select id, dept, people, date, company_id
+    from dbi_number
+    <where>
+    	<if test="date != null">
+    		and date like concat("%",#{date},"%")
+    	</if>
+    	<if test="companyName != null">
+    		and company_id = (select company_id 
+    							from ehr_company 
+    							where name like concat("%",#{companyName,jdbcType=VARCHAR},"%"))
+    	</if>
+    </where>
+  </select>
+</mapper>

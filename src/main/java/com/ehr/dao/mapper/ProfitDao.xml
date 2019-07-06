@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehr.dao.ProfitDao">
+  <resultMap id="BaseResultMap" type="com.ehr.model.Profit">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="date" jdbcType="DATE" property="date" />
+    <result column="rental" jdbcType="DOUBLE" property="rental" />
+    <result column="grossMargin" jdbcType="DOUBLE" property="grossmargin" />
+    <result column="tax" jdbcType="DOUBLE" property="tax" />
+    <result column="spending" jdbcType="DOUBLE" property="spending" />
+    <result column="company_id" jdbcType="VARCHAR" property="companyId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--根据id删除一条数据-->
+    delete from dbi_profit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ehr.model.Profit">
+    <!--新增一条数据-->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dbi_profit (date, rental, grossMargin, 
+      tax, spending, company_id
+      )
+    values (#{date,jdbcType=DATE}, #{rental,jdbcType=DOUBLE}, #{grossmargin,jdbcType=DOUBLE}, 
+      #{tax,jdbcType=DOUBLE}, #{spending,jdbcType=DOUBLE}, #{companyId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ehr.model.Profit">
+    <!-- 根据id更新一条数据 -->
+    update dbi_profit
+    set date = #{date,jdbcType=DATE},
+      rental = #{rental,jdbcType=DOUBLE},
+      grossMargin = #{grossmargin,jdbcType=DOUBLE},
+      tax = #{tax,jdbcType=DOUBLE},
+      spending = #{spending,jdbcType=DOUBLE},
+      company_id = #{companyId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--根据id查询一条数据-->
+    select id, date, rental, grossMargin, tax, spending, company_id
+    from dbi_profit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    <!--查找所有数据 -->
+    select id, date, rental, grossMargin, tax, spending, company_id
+    from dbi_profit
+  </select>
+  
+  <select id="selectAllDate" resultType="java.util.Date">
+    <!--查找所有月份 去重-->
+    select distinct date
+    from dbi_profit
+  </select>
+  <select id="selectAllCompany" resultType="java.lang.String">
+    <!--查找所有公司名字 去重-->
+    select name from ehr_company
+    where id in (select distinct company_id
+    from dbi_profit);
+   
+  </select>
+  <select id="selectByDate" resultMap="BaseResultMap">
+    <!--根据月份查数据 -->
+    select id, date, rental, grossMargin, tax, spending, company_id
+    from dbi_profit
+    <where>
+    	<if test="date != null">
+    		and date like concat("%",#{date},"%")
+    	</if>
+    	<if test="companyName != null">
+    		and company_id = (select id
+    							from ehr_company 
+    							where name = #{companyName,jdbcType=VARCHAR}
+    						)
+    	</if>
+    </where>
+  </select>
+</mapper>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: asus
+Build-Jdk: 10.0.2
+Implementation-Title: EHRDemo
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: EHRDemo
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/EHRDemo
+Created-By: Maven Integration for Eclipse
+

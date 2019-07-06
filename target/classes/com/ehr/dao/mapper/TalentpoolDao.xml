@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehr.dao.TalentpoolDao">
+<!-- 人才库存储表的Mapper映射器XML实现部分 -->
+  <resultMap id="BaseResultMap" type="com.ehr.model.Talentpool">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="QQ" jdbcType="VARCHAR" property="qq" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="currentAddress" jdbcType="VARCHAR" property="currentaddress" />
+    <result column="specialty" jdbcType="VARCHAR" property="specialty" />
+    <result column="comments" jdbcType="VARCHAR" property="comments" />
+    <result column="asTheCompany" jdbcType="VARCHAR" property="asthecompany" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="logicToDelete" jdbcType="INTEGER" property="logictodelete" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--删除指定id的数据-->
+    delete from ehr_talentpool
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ehr.model.Talentpool">
+    <!--新增一条数据-->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ehr_talentpool (name, sex, phone, 
+      QQ, email, age, currentAddress, 
+      specialty, comments, asTheCompany, 
+      mark, logicToDelete)
+    values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{currentaddress,jdbcType=VARCHAR}, 
+      #{specialty,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR}, #{asthecompany,jdbcType=VARCHAR}, 
+      #{mark,jdbcType=VARCHAR}, #{logictodelete,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ehr.model.Talentpool">
+    <!--修改一条数据 -->
+    update ehr_talentpool
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      QQ = #{qq,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      currentAddress = #{currentaddress,jdbcType=VARCHAR},
+      specialty = #{specialty,jdbcType=VARCHAR},
+      comments = #{comments,jdbcType=VARCHAR},
+      asTheCompany = #{asthecompany,jdbcType=VARCHAR},
+      mark = #{mark,jdbcType=VARCHAR},
+      logicToDelete = #{logictodelete,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--查询指定id的数据 -->
+    select id, name, sex, phone, QQ, email, age, currentAddress, specialty, comments, 
+    asTheCompany, mark, logicToDelete
+    from ehr_talentpool
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    <!--查询所有数据 -->
+    select id, name, sex, phone, QQ, email, age, currentAddress, specialty, comments, 
+    asTheCompany, mark, logicToDelete
+    from ehr_talentpool
+  </select>
+  <select id="selectLike" resultMap="BaseResultMap">
+    <!--模糊查询  根据名字和id查询  -->
+    select id, name, sex, phone, QQ, email, age, currentAddress, specialty, comments, 
+    asTheCompany, mark, logicToDelete
+    from ehr_talentpool
+    <where>
+    	<if test="name != null">
+    		and name like concat("%",#{name},"%")
+    	</if>
+    	<if test="sex != null">
+    		and sex = #{sex}
+    	</if>
+    </where>
+  </select>
+</mapper>

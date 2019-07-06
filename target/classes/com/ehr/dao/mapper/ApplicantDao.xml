@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehr.dao.ApplicantDao">
+<!-- 应聘者管理表 对应的Mapper映射器XML文件实现  -->
+  <resultMap id="BaseResultMap" type="com.ehr.model.Applicant">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="currentAddress" jdbcType="VARCHAR" property="currentaddress" />
+    <result column="applicantTime" jdbcType="DATE" property="applicanttime" />
+    <result column="specialty" jdbcType="VARCHAR" property="specialty" />
+    <result column="comments" jdbcType="VARCHAR" property="comments" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="logicToDelete" jdbcType="INTEGER" property="logictodelete" />
+  </resultMap>
+  <!-- 通过Id删除指定数据 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ehr_applicant
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 新增一条数据 -->
+  <insert id="insert" parameterType="com.ehr.model.Applicant">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ehr_applicant (name, sex, phone, 
+      qq, email, age, currentAddress, 
+      applicantTime, specialty, comments, 
+      mark, logicToDelete)
+    values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{currentaddress,jdbcType=VARCHAR}, 
+      #{applicanttime,jdbcType=DATE}, #{specialty,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR}, 
+      #{mark,jdbcType=VARCHAR}, #{logictodelete,jdbcType=INTEGER})
+  </insert>
+  <!-- 修改一条数据  -->
+  <update id="updateByPrimaryKey" parameterType="com.ehr.model.Applicant">
+    update ehr_applicant
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      currentAddress = #{currentaddress,jdbcType=VARCHAR},
+      applicantTime = #{applicanttime,jdbcType=DATE},
+      specialty = #{specialty,jdbcType=VARCHAR},
+      comments = #{comments,jdbcType=VARCHAR},
+      mark = #{mark,jdbcType=VARCHAR},
+      logicToDelete = #{logictodelete,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 查询指定Id的数据  -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, sex, phone, qq, email, age, currentAddress, applicantTime, specialty, 
+    comments, mark, logicToDelete
+    from ehr_applicant
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 查询所有数据  -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, sex, phone, qq, email, age, currentAddress, applicantTime, specialty, 
+    comments, mark, logicToDelete
+    from ehr_applicant
+  </select>
+  <!-- 模糊查询 通过名字和性别进行模糊查询  -->
+  <select id="selectLike" resultMap="BaseResultMap">
+    select id, name, sex, phone, qq, email, age, currentAddress, applicantTime, specialty, 
+    comments, mark, logicToDelete
+    from ehr_applicant
+    <where>
+    	<if test="name != null">
+    		and name like concat("%",#{name},"%")
+    	</if>
+    	<if test="sex != null">
+    		and sex = #{sex}
+    	</if>
+    </where>
+  </select>
+</mapper>

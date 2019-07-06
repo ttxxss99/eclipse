@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehr.dao.ReleasesDao">
+<!-- 招聘信息发布表的Mapper映射器XML实现部分 -->
+  <resultMap id="BaseResultMap" type="com.ehr.model.Releases">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="skillsRequired" jdbcType="VARCHAR" property="skillsrequired" />
+    <result column="hiring" jdbcType="INTEGER" property="hiring" />
+    <result column="wageBudget" jdbcType="INTEGER" property="wagebudget" />
+    <result column="initiateTime" jdbcType="TIMESTAMP" property="initiatetime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="emp_id" jdbcType="INTEGER" property="empId" />
+    <result column="channel_id" jdbcType="INTEGER" property="channelId" />
+    <result column="logicToDelete" jdbcType="INTEGER" property="logictodelete" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--删除指定Id的数据-->
+    delete from ehr_releases
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ehr.model.Releases">
+    <!--新增一条数据-->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ehr_releases (skillsRequired, hiring, wageBudget, 
+      initiateTime, state, mark, 
+      emp_id, channel_id, logicToDelete
+      )
+    values (#{skillsrequired,jdbcType=VARCHAR}, #{hiring,jdbcType=INTEGER}, #{wagebudget,jdbcType=INTEGER}, 
+      #{initiatetime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, #{mark,jdbcType=VARCHAR}, 
+      #{empId,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{logictodelete,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ehr.model.Releases">
+    <!--修改指定id的数据-->
+    update ehr_releases
+    set skillsRequired = #{skillsrequired,jdbcType=VARCHAR},
+      hiring = #{hiring,jdbcType=INTEGER},
+      wageBudget = #{wagebudget,jdbcType=INTEGER},
+      initiateTime = #{initiatetime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER},
+      mark = #{mark,jdbcType=VARCHAR},
+      emp_id = #{empId,jdbcType=INTEGER},
+      channel_id = #{channelId,jdbcType=INTEGER},
+      logicToDelete = #{logictodelete,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--查询指定id的数据-->
+    select id, skillsRequired, hiring, wageBudget, initiateTime, state, mark, emp_id, 
+    channel_id, logicToDelete
+    from ehr_releases
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    <!--查询所有数据-->
+    select id, skillsRequired, hiring, wageBudget, initiateTime, state, mark, emp_id, 
+    channel_id, logicToDelete
+    from ehr_releases
+    where logicToDelete = 1
+  </select>
+  <select id="selectLike" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--模糊查询  根据技能需求查询所有数据 -->
+    select id, skillsRequired, hiring, wageBudget, initiateTime, state, mark, emp_id, 
+    channel_id, logicToDelete
+    from ehr_releases
+    <!-- where skillsrequired like concat("%",#{skillsrequired },"%") -->
+    <where>
+    	<if test="skillsrequired != null">
+    		and skillsrequired like concat("%",#{skillsrequired },"%")
+    	</if>
+    </where>
+  </select>
+</mapper>

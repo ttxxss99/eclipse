@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehr.dao.EmpDao">
+<!-- 员工表Mapper映射器XML实现部分 -->
+  <resultMap id="BaseResultMap" type="com.ehr.model.Emp">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="QQ" jdbcType="VARCHAR" property="qq" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="currentAddress" jdbcType="VARCHAR" property="currentaddress" />
+    <result column="inductionTime" jdbcType="DATE" property="inductiontime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="specialty" jdbcType="VARCHAR" property="specialty" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="isLogin" jdbcType="INTEGER" property="islogin" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="paygrades_id" jdbcType="INTEGER" property="paygradesId" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="logicToDelete" jdbcType="INTEGER" property="logictodelete" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+ <!--  <resultMap id="EmpResultMap" type="com.ehr.model.Emp">
+  	<id column="id" jdbcType="INTEGER" property="id" />
+  	<result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap> -->
+  <!-- 根据id查找数据 返回用户的名字 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select name
+    from ehr_emp
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 通过名字寻找id -->
+  <select id="selectByName" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select id
+    from ehr_emp
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id,name
+    from ehr_emp
+  </select>
+  <select id="selectByUserNameAndPwd" parameterType="java.lang.String" resultType="java.lang.Integer">
+    <!--根据用户名和密码查询指定id-->
+    select id
+    from ehr_emp
+    <where>
+      <if test="userid != null">
+        and userid = #{userid}
+      </if>
+      <if test="password != null">
+        and password = #{password}
+      </if>
+    </where>
+  </select>
+</mapper>
